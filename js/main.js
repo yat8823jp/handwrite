@@ -1,7 +1,9 @@
-const imageCanvas = document.getElementById( "imageCanvas" );
-const drawCanvas = document.getElementById( "drawCanvas" );
+const imageCanvas    = document.getElementById( "imageCanvas" );
+const drawCanvas     = document.getElementById( "drawCanvas" );
 const drawTempCanvas = document.getElementById( "drawTempCanvas" );
-const pointerCanvas = document.getElementById( "pointerCanvas" );
+const pointerCanvas  = document.getElementById( "pointerCanvas" );
+
+let timer = 0;
 
 const ctxs = {
 	imageCtx   : imageCanvas.getContext( "2d" ),
@@ -32,14 +34,13 @@ if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContex
 		} );
 		zoom();
 	} );
-	window.addEventListener( "resize", zoom() );
+	window.addEventListener( 'resize', zoom() );
 }
 
 function mouseDown( e ) {
-
-    option.holdClick = true;
-    option.startX = e.offsetX;
-    option.startY = e.offsetY;
+	option.holdClick = true;
+	option.startX = e.offsetX;
+	option.startY = e.offsetY;
 }
 
 function mouseMove( e ) {
@@ -84,7 +85,6 @@ function pointer( e ) {
 function zoom() {
 	let displayWidth  = drawCanvas.clientWidth;
 	let displayHeight = drawCanvas.clientHeight;
-
   	// canvasの「描画バッファーのサイズ」と「表示サイズ」が異なるかどうか確認する。
 	if ( drawCanvas.width != displayWidth || drawCanvas.height != displayHeight ) {
 
