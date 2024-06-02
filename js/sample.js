@@ -156,6 +156,7 @@ function alphaChange(num) {
 
 // マウスクリックイベント
 function mouseDown(e) {
+
     holdClick = true;
     // クリック開始座標を保持
     startX = e.offsetX;
@@ -253,7 +254,6 @@ function mouseWheel(e) {
 
 // drawCanvasエリア描画(ペン)
 function drawPen(e) {
-
     drawCtx.lineWidth = brushSize;
     drawCtx.strokeStyle = canvasRgba;
     drawCtx.lineJoin = "round";
