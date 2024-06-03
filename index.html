@@ -4,18 +4,46 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://unpkg.com/modern-css-reset/dist/reset.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 	<link rel="stylesheet" href="./css/style.css">
 	<title>Document</title>
 </head>
 <body>
-	<article>
-		<div id="canvas-area" width="100%" class="canvas-wrapper">
-			<canvas id="imageCanvas" class="image-canvas"></canvas>
-			<canvas id="drawCanvas" class="draw-canvas"></canvas>
-			<canvas id="drawTempCanvas" class="draw-temp-canvas"></canvas>
-			<canvas id="pointerCanvas" class="ponter-canvas"></canvas>
+	<main>
+		<div class="inner">
+			<section class="hand-draw">
+				<h1 class="title">Hand Draw</h1>
+				<ul class="ul-set">
+					<li>
+						<label class="form-check-label">
+							<input class="form-type-select" type="radio" name="mode" value="1" checked>
+							<i class="fa-solid fa-pen"></i>
+							ペン
+						</label>
+
+					</li>
+					<li>
+						<label class="form-check-label">
+							<input class="form-type-select" type="radio" name="mode" value="2">
+							<i class="fa-solid fa-eraser"></i>
+							消しゴム
+						</label>
+					</li>
+					<li>
+						<i class="fa-solid fa-circle"></i>
+						<input id="brush-size-range" type="range" class="form-weight-range" min="1" max="20" value="4"></input>
+						<span id="brush-size" class="brush-size-num">4</span>
+					</li>
+				</ul>
+				<article id="canvas-area" width="100%" class="canvas-wrapper">
+					<canvas id="imageCanvas" class="image-canvas"></canvas>
+					<canvas id="drawCanvas" class="draw-canvas"></canvas>
+					<canvas id="drawTempCanvas" class="draw-temp-canvas"></canvas>
+					<canvas id="pointerCanvas" class="ponter-canvas"></canvas>
+				</article>
+			</section>
 		</div>
-	</article>
+	</main>
 
 	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 	<script src="./js/main.js"></script>

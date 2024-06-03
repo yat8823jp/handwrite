@@ -5,6 +5,8 @@ const pointerCanvas  = document.getElementById( "pointerCanvas" );
 
 const FRAMERATE = 60;
 let timer = 0;
+let mode  = 1; //1:pen 2:eraser
+const brachSizeRange = document.getElementById( 'brush-size-range' );
 
 const ctxs = {
 	imageCtx   : imageCanvas.getContext( "2d" ),
@@ -20,6 +22,12 @@ let option = {
 	startX     : 0,
 	startY     : 0
 }
+
+let brushSizeChange = ( num ) => {
+	document.getElementById( 'brush-size' ).innerHTML = num;
+	option.brushSize = num;
+}
+
 let zoom = () => {
 	let displayWidth  = drawCanvas.clientWidth;
 	let displayHeight = drawCanvas.clientHeight;
@@ -44,16 +52,23 @@ if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContex
 		pointerCanvas.addEventListener( 'mousemove',  mouseMove );
 		pointerCanvas.addEventListener( 'touchmove',  mouseMove );
 		pointerCanvas.addEventListener( 'mouseup',    mouseUp );
-		pointerCanvas.addEventListener( 'touchend',   function( e ) { e.preventDefault(); mouseUp } );
+		pointerCanvas.addEventListener( 'touchend',   ( e ) => { e.preventDefault(); mouseUp } );
 
-		pointerCanvas.addEventListener( 'mouseout', function ( e ) {
+		pointerCanvas.addEventListener( 'mouseout', ( e ) => {
 			ctxs.pointerCtx.clearRect( 0, 0, imageCanvas.width, imageCanvas.height );
 			if ( option.holdClick ) mouseUp( e );
 		} );
 		zoom();
 	} );
 	window.addEventListener( 'resize', zoom() );
+	window.addEventListener( 'change', () => {
+		mode = document.querySelector( 'input[name="mode"]:checked' ).value;
+	} );
+	brachSizeRange.addEventListener( 'change', ( e ) =>  {
+		brushSizeChange( e.target.value );
+	} );
 }
+
 
 let mouseDown = ( e ) => {
 	let offsetX, offsetY;
@@ -61,7 +76,6 @@ let mouseDown = ( e ) => {
 	option.holdClick = true;
 	option.startX = offsets.x;
 	option.startY = offsets.y;
-	return option;
 }
 
 let getOffsets = ( e ) => {
@@ -82,23 +96,49 @@ let getOffsets = ( e ) => {
 
 let mouseMove = ( e ) => {
 	pointer( e );
-	if ( option.holdClick ) {
-		e.preventDefault();
-		drawPen( e );
+	e.preventDefault();
+	if ( mode === "1" ) {
+		if ( option.holdClick ) {
+			drawPen( e );
+		}
+	} else if ( mode === "2" ) {
+		pointer( e );
+		if ( option.holdClick ) {
+			drawErase( e );
+		}
 	}
 }
 
 let mouseUp = ( e ) => {
 	option.holdClick = false;
-	drawPen( e );
+	if ( mode === "1" ) {
+		drawPen( e );
+	} else if ( mode === "2" ) {
+		drawErase( e );
+	}
 }
 
 let drawPen = ( e ) => {
 	let offsets = getOffsets( e );
-	ctxs.drawCtx.lineWidth                = option.brushSize;
-	ctxs.drawCtx.strokeStyle              = option.strokeColor;
-	ctxs.drawCtx.lineJoin                 = "round";
-	ctxs.drawCtx.lineCap                  = "round";
+	ctxs.drawCtx.lineWidth   = option.brushSize;
+	ctxs.drawCtx.strokeStyle = option.strokeColor;
+	ctxs.drawCtx.lineJoin    = "round";
+	ctxs.drawCtx.lineCap     = "round";
+	ctxs.drawCtx.globalCompositeOperation = 'source-over';
+	ctxs.drawCtx.beginPath();
+	ctxs.drawCtx.moveTo( option.startX, option.startY );
+	ctxs.drawCtx.lineTo( offsets.x, offsets.y );
+	ctxs.drawCtx.stroke();
+	ctxs.drawCtx.closePath();
+	option.startX = offsets.x;
+	option.startY = offsets.y;
+}
+
+let drawErase = ( e ) => {
+	let offsets = getOffsets( e );
+	ctxs.drawCtx.lineWidth   = option.brushSize;
+	ctxs.drawCtx.strokeStyle = 'rgba( 255, 255, 255, 1 )';
+	ctxs.drawCtx.globalCompositeOperation = 'destination-out';
 	ctxs.drawCtx.beginPath();
 	ctxs.drawCtx.moveTo( option.startX, option.startY );
 	ctxs.drawCtx.lineTo( offsets.x, offsets.y );
@@ -111,9 +151,14 @@ let drawPen = ( e ) => {
 let pointer = ( e ) => {
 	let offsets = getOffsets( e );
 	ctxs.pointerCtx.clearRect( 0, 0, imageCanvas.width, imageCanvas.height );
-	if ( option.holdClick ) {
-		drawPen( e );
+	if ( mode === "2" ) {
+		ctxs.pointerCtx.strokeStyle = "rgba(255, 255, 255, 1)";
+	} else {
+		ctxs.pointerCtx.strokeStyle = option.strokeColor;
 	}
+	ctxs.pointerCtx.lineWidth = option.brushSize;
+	ctxs.pointerCtx.lineJoin = "round";
+
 	ctxs.pointerCtx.beginPath();
 	ctxs.pointerCtx.moveTo( offsets.x, offsets.y );
 	ctxs.pointerCtx.lineTo( offsets.x, offsets.y );
