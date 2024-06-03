@@ -120,4 +120,3 @@ let pointer = ( e ) => {
 	ctxs.pointerCtx.stroke();
 	ctxs.pointerCtx.closePath();
 }
-
