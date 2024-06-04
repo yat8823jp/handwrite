@@ -6,6 +6,7 @@ const pointerCanvas  = document.getElementById( "pointerCanvas" );
 const FRAMERATE = 60;
 let timer = 0;
 let mode  = 1; //1:pen 2:eraser
+let offsetX, offsetY;
 const brachSizeRange = document.getElementById( 'brush-size-range' );
 
 const ctxs = {
@@ -62,7 +63,7 @@ if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContex
 	} );
 	window.addEventListener( 'resize', zoom() );
 	window.addEventListener( 'change', () => {
-		mode = document.querySelector( 'input[name="mode"]:checked' ).value;
+		mode = Number( document.querySelector( 'input[name="mode"]:checked' ).value );
 	} );
 	brachSizeRange.addEventListener( 'change', ( e ) =>  {
 		brushSizeChange( e.target.value );
@@ -71,7 +72,6 @@ if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContex
 
 
 let mouseDown = ( e ) => {
-	let offsetX, offsetY;
 	let offsets = getOffsets( e );
 	option.holdClick = true;
 	option.startX = offsets.x;
@@ -97,11 +97,11 @@ let getOffsets = ( e ) => {
 let mouseMove = ( e ) => {
 	pointer( e );
 	e.preventDefault();
-	if ( mode === "1" ) {
+	if ( mode === 1 ) {
 		if ( option.holdClick ) {
 			drawPen( e );
 		}
-	} else if ( mode === "2" ) {
+	} else if ( mode === 2 ) {
 		pointer( e );
 		if ( option.holdClick ) {
 			drawErase( e );
@@ -111,9 +111,9 @@ let mouseMove = ( e ) => {
 
 let mouseUp = ( e ) => {
 	option.holdClick = false;
-	if ( mode === "1" ) {
+	if ( mode === 1 ) {
 		drawPen( e );
-	} else if ( mode === "2" ) {
+	} else if ( mode === 2 ) {
 		drawErase( e );
 	}
 }
@@ -151,7 +151,7 @@ let drawErase = ( e ) => {
 let pointer = ( e ) => {
 	let offsets = getOffsets( e );
 	ctxs.pointerCtx.clearRect( 0, 0, imageCanvas.width, imageCanvas.height );
-	if ( mode === "2" ) {
+	if ( mode === 2 ) {
 		ctxs.pointerCtx.strokeStyle = "rgba(255, 255, 255, 1)";
 	} else {
 		ctxs.pointerCtx.strokeStyle = option.strokeColor;
