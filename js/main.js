@@ -16,6 +16,8 @@ const redoMark = document.getElementById( 'redoMark' );
 const brachSizeRange = document.getElementById( 'brush-size-range' );
 const undoButton = document.getElementById( 'undo' );
 const redoButton = document.getElementById( 'redo' );
+undoButton.disabled = true;
+redoButton.disabled = true;
 
 const ctxs = {
 	imageCtx   : imageCanvas.getContext( "2d" ),
@@ -77,6 +79,7 @@ if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContex
 		brushSizeChange( e.target.value );
 	} );
 	undoButton.addEventListener( 'click', () => undo() );
+	redoButton.addEventListener( 'click', () => redo() );
 }
 
 
@@ -85,6 +88,7 @@ let mouseDown = ( e ) => {
 	option.holdClick = true;
 	option.startX = offsets.x;
 	option.startY = offsets.y;
+	redoReset();
 	undoStack();
 }
 
@@ -180,25 +184,41 @@ let undoStack = () => {
 	imageData = ctxs.drawCtx.getImageData( 0, 0, drawCanvas.width, drawCanvas.height );
 	if ( undoData.length >= undoMax ) undoData.shift();
 	undoData.push( imageData );
+	undoButton.disabled = false;
 	undoMark.style.color = '#333';
 }
 
-let doOperation = () => {
-	const reversedOperations = reverseOperation( operation, shapes.value );
-	shapes.value = applyOperation( shapes.value, operation );
-	undoStak.value.push( reversedOperation );
-	redoStack.value = [];
+let redoStack = () => {
+	imageData = ctxs.drawCtx.getImageData( 0, 0, drawCanvas.width, drawCanvas.height );
+	if ( redoData.length >= undoMax ) redoData.shift();
+	redoData.push( imageData );
+	redoButton.disabled = false;
+	redoMark.style.color = '#333';
 }
 
 let undo = () => {
 	if ( undoData.length > 0 ) {
-		// redoStack.value.push( operation );
-		// operation = undoStak.value.pop();
-		// doOperation();
+		redoStack();
 		ctxs.drawCtx.putImageData( undoData.pop(), 0, 0 );
-		// undoStack.pop();
 		if( ! undoData.length ) {
+			undoButton.disabled = true;
 			undoMark.style.color = null;
 		}
 	}
+}
+
+let redo = () => {
+	if ( redoData.length > 0 ) {
+		undoStack();
+		ctxs.drawCtx.putImageData( redoData.pop(), 0, 0 );
+		if( ! redoData.length ) {
+			redoButton.disabled = true;
+			redoMark.style.color = null;
+		}
+	}
+}
+
+let redoReset = () => {
+	redoData.length = 0;
+	redoMark.style.color = null;
 }
