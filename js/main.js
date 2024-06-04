@@ -3,15 +3,23 @@ const drawCanvas     = document.getElementById( "drawCanvas" );
 const drawTempCanvas = document.getElementById( "drawTempCanvas" );
 const pointerCanvas  = document.getElementById( "pointerCanvas" );
 
-const FRAMERATE = 60;
 let timer = 0;
 let mode  = 1; //1:pen 2:eraser
 let offsetX, offsetY;
+let imageData;
+const undoMax = 10;
+const undoData = [];
+const redoData = [];
+const undoMark = document.getElementById( 'undoMark' );
+const redoMark = document.getElementById( 'redoMark' );
+
 const brachSizeRange = document.getElementById( 'brush-size-range' );
+const undoButton = document.getElementById( 'undo' );
+const redoButton = document.getElementById( 'redo' );
 
 const ctxs = {
 	imageCtx   : imageCanvas.getContext( "2d" ),
-	drawCtx    : drawCanvas.getContext( "2d" ),
+	drawCtx    : drawCanvas.getContext( "2d", { willReadFrequently: true } ),
 	drawTempCtx: drawTempCanvas.getContext( "2d" ),
 	pointerCtx : pointerCanvas.getContext( "2d" )
 }
@@ -68,6 +76,7 @@ if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContex
 	brachSizeRange.addEventListener( 'change', ( e ) =>  {
 		brushSizeChange( e.target.value );
 	} );
+	undoButton.addEventListener( 'click', () => undo() );
 }
 
 
@@ -76,6 +85,7 @@ let mouseDown = ( e ) => {
 	option.holdClick = true;
 	option.startX = offsets.x;
 	option.startY = offsets.y;
+	undoStack();
 }
 
 let getOffsets = ( e ) => {
@@ -164,4 +174,31 @@ let pointer = ( e ) => {
 	ctxs.pointerCtx.lineTo( offsets.x, offsets.y );
 	ctxs.pointerCtx.stroke();
 	ctxs.pointerCtx.closePath();
+}
+
+let undoStack = () => {
+	imageData = ctxs.drawCtx.getImageData( 0, 0, drawCanvas.width, drawCanvas.height );
+	if ( undoData.length >= undoMax ) undoData.shift();
+	undoData.push( imageData );
+	undoMark.style.color = '#333';
+}
+
+let doOperation = () => {
+	const reversedOperations = reverseOperation( operation, shapes.value );
+	shapes.value = applyOperation( shapes.value, operation );
+	undoStak.value.push( reversedOperation );
+	redoStack.value = [];
+}
+
+let undo = () => {
+	if ( undoData.length > 0 ) {
+		// redoStack.value.push( operation );
+		// operation = undoStak.value.pop();
+		// doOperation();
+		ctxs.drawCtx.putImageData( undoData.pop(), 0, 0 );
+		// undoStack.pop();
+		if( ! undoData.length ) {
+			undoMark.style.color = null;
+		}
+	}
 }

@@ -13,7 +13,7 @@
 		<div class="inner">
 			<section class="hand-draw">
 				<h1 class="title">Hand Draw</h1>
-				<ul class="ul-set">
+				<ul class="ui-set">
 					<li>
 						<label class="form-check-label">
 							<input class="form-type-select" type="radio" name="mode" value="1" checked>
@@ -41,6 +41,20 @@
 					<canvas id="drawTempCanvas" class="draw-temp-canvas"></canvas>
 					<canvas id="pointerCanvas" class="ponter-canvas"></canvas>
 				</article>
+				<ul class="ui-set">
+					<li>
+						<button id="undo" class="undo-btn">
+							<i id="undoMark" class="fa-solid fa-arrow-rotate-left"></i>
+							<span>戻す</span>
+						</button>
+					</li>
+					<li>
+						<button id="redo" class="redo-btn">
+							<i id="redoMark" class="fa-solid fa-arrow-rotate-right"></i>
+							<span>進む</span>
+						</button>
+					</li>
+				</ul>
 			</section>
 		</div>
 	</main>
