@@ -7,15 +7,22 @@ let timer = 0;
 let mode  = 1; //1:pen 2:eraser
 let offsetX, offsetY;
 let imageData;
-const undoMax = 10;
-const undoData = [];
-const redoData = [];
-const undoMark = document.getElementById( 'undoMark' );
-const redoMark = document.getElementById( 'redoMark' );
+const undoMax   = 10;
+const undoData  = [];
+const redoData  = [];
+const undoMark  = document.getElementById( 'undoMark' );
+const redoMark  = document.getElementById( 'redoMark' );
+const clearMark = document.getElementById( 'clearMark' );
 
 const brachSizeRange = document.getElementById( 'brush-size-range' );
-const undoButton = document.getElementById( 'undo' );
-const redoButton = document.getElementById( 'redo' );
+const clearButton = document.getElementById( 'clear' );
+const clearModal  = document.getElementById( 'clear-modal' );
+const clearCancelButton = document.getElementById( 'clearCancel' );
+const clearConfirmButton = document.getElementById( 'clearConfirm' );
+const clearModalForm  = document.getElementById( 'clear-modal-form' );
+const undoButton  = document.getElementById( 'undo' );
+const redoButton  = document.getElementById( 'redo' );
+clearButton.disabled = true;
 undoButton.disabled = true;
 redoButton.disabled = true;
 
@@ -78,8 +85,9 @@ if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContex
 	brachSizeRange.addEventListener( 'change', ( e ) =>  {
 		brushSizeChange( e.target.value );
 	} );
-	undoButton.addEventListener( 'click', () => undo() );
-	redoButton.addEventListener( 'click', () => redo() );
+	undoButton.addEventListener(  'click', () => undo() );
+	redoButton.addEventListener(  'click', () => redo() );
+	clearButton.addEventListener( 'click', () => clear() );
 }
 
 
@@ -146,6 +154,7 @@ let drawPen = ( e ) => {
 	ctxs.drawCtx.closePath();
 	option.startX = offsets.x;
 	option.startY = offsets.y;
+	clearButtonToggle();
 }
 
 let drawErase = ( e ) => {
@@ -205,6 +214,7 @@ let undo = () => {
 			undoMark.style.color = null;
 		}
 	}
+	clearButtonToggle();
 }
 
 let redo = () => {
@@ -216,9 +226,38 @@ let redo = () => {
 			redoMark.style.color = null;
 		}
 	}
+	clearButtonToggle();
 }
 
 let redoReset = () => {
 	redoData.length = 0;
 	redoMark.style.color = null;
+}
+
+let clearButtonToggle = () => {
+	imageData = ctxs.drawCtx.getImageData( 0, 0, drawCanvas.width, drawCanvas.height );
+	data = imageData.data;
+	dataReduce = data.reduce( function ( prev, current, i, arr ) { return prev + current } );
+	if( dataReduce ) {
+		clearButton.disabled = false;
+		clearMark.style.color = "#333";
+	} else {
+		clearButton.disabled = true;
+		clearMark.style.color = null;
+	}
+}
+
+let clear = () => {
+	clearModal.showModal();
+	clearConfirmButton.addEventListener( 'click', clearConfirm );
+}
+
+let clearConfirm = () => {
+	undoStack();
+	ctxs.imageCtx.clearRect( 0, 0, imageCanvas.width, imageCanvas.height );
+	ctxs.drawCtx.clearRect( 0, 0, drawCanvas.width, drawCanvas.height );
+	ctxs.pointerCtx.clearRect( 0, 0, drawCanvas.width, drawCanvas.height );
+	clearMark.style.color = null;
+	clearButton.disabled = true;
+	clearModal.close();
 }

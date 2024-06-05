@@ -40,6 +40,13 @@
 					<canvas id="drawCanvas" class="draw-canvas"></canvas>
 					<canvas id="drawTempCanvas" class="draw-temp-canvas"></canvas>
 					<canvas id="pointerCanvas" class="ponter-canvas"></canvas>
+					<dialog id="clear-modal">
+						<p>削除しても良いですか？</p>
+						<form id="clear-modal-form" method="dialog">
+							<button id="clearCancel" class="clear-no">NO</button>
+							<button id="clearConfirm" class="clear-ok">OK</button>
+						</form>
+					</dialog>
 				</article>
 				<ul class="ui-set">
 					<li>
@@ -54,11 +61,16 @@
 							<span>進む</span>
 						</button>
 					</li>
+					<li class="right">
+						<button id="clear" class="clear-btn">
+							<i id="clearMark" class="fa-solid fa-trash"></i>
+							<span>削除</span>
+						</button>
+					</li>
 				</ul>
 			</section>
 		</div>
 	</main>
-
 	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 	<script src="./js/main.js"></script>
 </body>
