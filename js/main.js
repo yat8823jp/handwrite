@@ -7,14 +7,17 @@ let timer = 0;
 let mode  = 1; //1:pen 2:eraser
 let offsetX, offsetY;
 let imageData;
+const colorFaluse = "#333";
 const undoMax   = 10;
 const undoData  = [];
 const redoData  = [];
 const undoMark  = document.getElementById( 'undoMark' );
 const redoMark  = document.getElementById( 'redoMark' );
 const clearMark = document.getElementById( 'clearMark' );
+const downloadMark = document.getElementById( 'downloadMark' );
 
 const brachSizeRange = document.getElementById( 'brush-size-range' );
+const downloadButton = document.getElementById( 'download' );
 const clearButton = document.getElementById( 'clear' );
 const clearModal  = document.getElementById( 'clear-modal' );
 const clearCancelButton = document.getElementById( 'clearCancel' );
@@ -88,6 +91,7 @@ if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContex
 	undoButton.addEventListener(  'click', () => undo() );
 	redoButton.addEventListener(  'click', () => redo() );
 	clearButton.addEventListener( 'click', () => clear() );
+	downloadButton.addEventListener( 'click', ( e ) => download( e ) );
 }
 
 
@@ -154,7 +158,7 @@ let drawPen = ( e ) => {
 	ctxs.drawCtx.closePath();
 	option.startX = offsets.x;
 	option.startY = offsets.y;
-	clearButtonToggle();
+	buttonStatusToggle();
 }
 
 let drawErase = ( e ) => {
@@ -214,7 +218,7 @@ let undo = () => {
 			undoMark.style.color = null;
 		}
 	}
-	clearButtonToggle();
+	buttonStatusToggle();
 }
 
 let redo = () => {
@@ -226,7 +230,7 @@ let redo = () => {
 			redoMark.style.color = null;
 		}
 	}
-	clearButtonToggle();
+	buttonStatusToggle();
 }
 
 let redoReset = () => {
@@ -234,16 +238,22 @@ let redoReset = () => {
 	redoMark.style.color = null;
 }
 
-let clearButtonToggle = () => {
+let buttonStatusToggle = () => {
 	imageData = ctxs.drawCtx.getImageData( 0, 0, drawCanvas.width, drawCanvas.height );
 	data = imageData.data;
 	dataReduce = data.reduce( function ( prev, current, i, arr ) { return prev + current } );
 	if( dataReduce ) {
 		clearButton.disabled = false;
-		clearMark.style.color = "#333";
+		clearMark.style.color = colorFaluse;
+		downloadButton.disabled = false;
+		downloadMark.style.color = colorFaluse;
+		return false;
 	} else {
 		clearButton.disabled = true;
 		clearMark.style.color = null;
+		downloadButton.disabled = true;
+		downloadMark.style.color = null;
+		return true;
 	}
 }
 
@@ -257,7 +267,19 @@ let clearConfirm = () => {
 	ctxs.imageCtx.clearRect( 0, 0, imageCanvas.width, imageCanvas.height );
 	ctxs.drawCtx.clearRect( 0, 0, drawCanvas.width, drawCanvas.height );
 	ctxs.pointerCtx.clearRect( 0, 0, drawCanvas.width, drawCanvas.height );
-	clearMark.style.color = null;
-	clearButton.disabled = true;
+	buttonStatusToggle();
 	clearModal.close();
+}
+
+let download = ( e ) => {
+	if ( buttonStatusToggle() ) {
+		e.preventDefault();
+	} else {
+		let date = new Date;
+		let timestamp = Math.floor( date.getTime() / 1000 );
+		let img = drawCanvas.toDataURL( "image/png" );
+		downloadButton.download = timestamp;
+		downloadButton.href = img;
+	}
+
 }
