@@ -186,12 +186,12 @@ let pointer = ( e ) => {
 	let offsets = getOffsets( e );
 	ctxs.pointerCtx.clearRect( 0, 0, imageCanvas.width, imageCanvas.height );
 	if ( mode === 2 ) {
-		ctxs.pointerCtx.strokeStyle = "rgba(255, 255, 255, 1)";
+		ctxs.pointerCtx.strokeStyle = "rgba( 221, 221, 221, 1 )";
 	} else {
 		ctxs.pointerCtx.strokeStyle = option.strokeColor;
 	}
 	ctxs.pointerCtx.lineWidth = option.brushSize;
-	ctxs.pointerCtx.lineJoin = "round";
+	ctxs.pointerCtx.lineCap = "round";
 
 	ctxs.pointerCtx.beginPath();
 	ctxs.pointerCtx.moveTo( offsets.x, offsets.y );
