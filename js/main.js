@@ -71,7 +71,7 @@ if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContex
 		pointerCanvas.addEventListener( 'mousedown',  mouseDown );
 		pointerCanvas.addEventListener( 'touchstart', mouseDown );
 		pointerCanvas.addEventListener( 'mousemove',  mouseMove );
-		pointerCanvas.addEventListener( 'touchmove',  mouseMove );
+		pointerCanvas.addEventListener( 'touchmove',  touchCheck );
 		pointerCanvas.addEventListener( 'mouseup',    mouseUp );
 		pointerCanvas.addEventListener( 'touchend',   ( e ) => { e.preventDefault(); mouseUp } );
 
@@ -93,7 +93,6 @@ if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContex
 	clearButton.addEventListener( 'click', () => clear() );
 	downloadButton.addEventListener( 'click', ( e ) => download( e ) );
 }
-
 
 let mouseDown = ( e ) => {
 	let offsets = getOffsets( e );
@@ -118,6 +117,14 @@ let getOffsets = ( e ) => {
 		offsets.y = e.offsetY;
 	}
 	return offsets;
+}
+
+let touchCheck = ( e ) => {
+	if ( e.touches.length <= 1 ) {//One finger tap
+		mouseMove( e );
+	} else if (e.touches.length >= 2 ) {//Two finger tap
+		return;
+	}
 }
 
 let mouseMove = ( e ) => {
