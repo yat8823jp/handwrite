@@ -16,7 +16,7 @@ const redoMark  = document.getElementById( 'redoMark' );
 const clearMark = document.getElementById( 'clearMark' );
 const downloadMark = document.getElementById( 'downloadMark' );
 
-const brachSizeRange = document.getElementById( 'brush-size-range' );
+const brushSizeRange = document.getElementById( 'brush-size-range' );
 const downloadButton = document.getElementById( 'download' );
 const clearButton = document.getElementById( 'clear' );
 const clearModal  = document.getElementById( 'clear-modal' );
@@ -85,7 +85,7 @@ if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContex
 	window.addEventListener( 'change', () => {
 		mode = Number( document.querySelector( 'input[name="mode"]:checked' ).value );
 	} );
-	brachSizeRange.addEventListener( 'change', ( e ) =>  {
+	brushSizeRange.addEventListener( 'change', ( e ) =>  {
 		brushSizeChange( e.target.value );
 	} );
 	undoButton.addEventListener(  'click', () => undo() );
