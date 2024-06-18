@@ -5,6 +5,8 @@
 - Canvas
 - JavaScript
 - SCSS
+- A modern CSS reset（https://github.com/Andy-set-studio/modern-css-reset）
+- FontAwesome（https://fontawesome.com/）
 
 ## Usage
 

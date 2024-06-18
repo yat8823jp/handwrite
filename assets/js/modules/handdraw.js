@@ -1,12 +1,17 @@
 const imageCanvas    = document.getElementById( "imageCanvas" );
 const drawCanvas     = document.getElementById( "drawCanvas" );
-const drawTempCanvas = document.getElementById( "drawTempCanvas" );
+const tempCanvas     = document.getElementById( "tempCanvas" );
 const pointerCanvas  = document.getElementById( "pointerCanvas" );
 
-let timer = 0;
 let mode  = 1; //1:pen 2:eraser
 let offsetX, offsetY;
 let imageData;
+
+const canvas = {
+	width: 500,
+	height: 350
+}
+
 const colorFaluse = "#333";
 const undoMax   = 10;
 const undoData  = [];
@@ -32,7 +37,7 @@ redoButton.disabled = true;
 const ctxs = {
 	imageCtx   : imageCanvas.getContext( "2d" ),
 	drawCtx    : drawCanvas.getContext( "2d", { willReadFrequently: true } ),
-	drawTempCtx: drawTempCanvas.getContext( "2d" ),
+	drawTempCtx: tempCanvas.getContext( "2d" ),
 	pointerCtx : pointerCanvas.getContext( "2d" )
 }
 
@@ -58,16 +63,17 @@ let zoom = () => {
 		imageCanvas.height    = displayHeight;
 		drawCanvas.width      = displayWidth;
 		drawCanvas.height     = displayHeight;
-		drawTempCanvas.width  = displayWidth;
-		drawTempCanvas.height = displayHeight;
+		tempCanvas.width      = displayWidth;
+		tempCanvas.height     = displayHeight;
 		pointerCanvas.width   = displayWidth;
 		pointerCanvas.height  = displayHeight;
 	}
 }
 
-if ( imageCanvas.getContext && drawCanvas.getContext && drawTempCanvas.getContext && pointerCanvas.getContext ) {
+if ( imageCanvas.getContext && drawCanvas.getContext && tempCanvas.getContext && pointerCanvas.getContext ) {
 
 	window.addEventListener( 'load', function ( e ) {
+		image( canvas );
 		pointerCanvas.addEventListener( 'mousedown',  mouseDown );
 		pointerCanvas.addEventListener( 'touchstart', mouseDown );
 		pointerCanvas.addEventListener( 'mousemove',  mouseMove );
@@ -289,6 +295,12 @@ let download = ( e ) => {
 		downloadButton.href = img;
 	}
 
+}
+
+let image = ( canvas ) => {
+	const img = new Image( canvas.width, canvas.height );
+	img.src = "/assets/img/human.png";
+	img.addEventListener( "load", () => ctxs.drawTempCtx.drawImage( img, 0, 0, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height) );
 }
 
 export const handDraw = () => {}
