@@ -23,54 +23,56 @@ button {
 	user-select: none;
 }
 .hand-draw {
-	.title {
-		text-align: center;
-		margin-bottom: 24px;
-	}
-	.ui-set {
-		width: 350px;
-		margin-inline: auto;
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-		gap: 16px;
-		li {
-			margin: 0;
-			&.right {
-				margin: 0 0 0 auto;
+	.inner {
+		.title {
+			text-align: center;
+			margin-bottom: 24px;
+		}
+		.ui-set {
+			width: 350px;
+			margin-inline: auto;
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			gap: 16px;
+			li {
+				margin: 0;
+				&.right {
+					margin: 0 0 0 auto;
+				}
 			}
-		}
-		.form-type-select {
-			display: none;
-		}
-		.form-type-select:checked + i {
-			color: #333;
-		}
-		label {
-			font-size: 0;
-			&:hover {
-				cursor: pointer;
+			.form-type-select {
+				display: none;
 			}
-		}
-		i {
-			font-size: 24px;
-			color: #999;
-		}
-		.fa-circle {
-			color: #000;
-		}
-		.button-undo,
-		.button-redo,
-		.button-clear,
-		.button-download {
-			background-color: transparent;
-			border: none;
-			padding: 0;
-			appearance: none;
-			cursor: pointer;
-			text-decoration: none;
-			> span {
+			.form-type-select:checked + i {
+				color: #333;
+			}
+			label {
 				font-size: 0;
+				&:hover {
+					cursor: pointer;
+				}
+			}
+			i {
+				font-size: 24px;
+				color: #999;
+			}
+			.fa-circle {
+				color: #000;
+			}
+			.button-undo,
+			.button-redo,
+			.button-clear,
+			.button-download {
+				background-color: transparent;
+				border: none;
+				padding: 0;
+				appearance: none;
+				cursor: pointer;
+				text-decoration: none;
+				> span {
+					font-size: 0;
+				}
 			}
 		}
 	}

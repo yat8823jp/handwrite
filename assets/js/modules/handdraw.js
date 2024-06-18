@@ -2,6 +2,7 @@ const imageCanvas    = document.getElementById( "imageCanvas" );
 const drawCanvas     = document.getElementById( "drawCanvas" );
 const tempCanvas     = document.getElementById( "tempCanvas" );
 const pointerCanvas  = document.getElementById( "pointerCanvas" );
+const BGIMG          = "/assets/img/human.png";
 
 let mode  = 1; //1:pen 2:eraser
 let offsetX, offsetY;
@@ -291,15 +292,15 @@ let download = ( e ) => {
 		let date = new Date;
 		let timestamp = Math.floor( date.getTime() / 1000 );
 		let img = drawCanvas.toDataURL( "image/png" );
+		console.log( img );;
 		downloadButton.download = timestamp;
 		downloadButton.href = img;
 	}
-
 }
 
 let image = ( canvas ) => {
 	const img = new Image( canvas.width, canvas.height );
-	img.src = "/assets/img/human.png";
+	img.src = BGIMG;
 	img.addEventListener( "load", () => ctxs.drawTempCtx.drawImage( img, 0, 0, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height) );
 }
 

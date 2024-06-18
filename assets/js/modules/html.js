@@ -1,4 +1,4 @@
-document.querySelector('#handDraw').innerHTML = `<section class="hand-draw">
+document.querySelector('#handDraw').innerHTML = `<section class="inner">
 			<h1 class="title">Hand Draw</h1>
 			<ul class="ui-set">
 				<li>
