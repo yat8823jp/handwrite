@@ -2,7 +2,7 @@ const imageCanvas    = document.getElementById( "imageCanvas" );
 const drawCanvas     = document.getElementById( "drawCanvas" );
 const tempCanvas     = document.getElementById( "tempCanvas" );
 const pointerCanvas  = document.getElementById( "pointerCanvas" );
-const BGIMG          = "/assets/img/human.png";
+const BGIMG          = "/assets/img/sample.png";
 
 let mode  = 1; //1:pen 2:eraser
 let offsetX, offsetY;
@@ -291,8 +291,6 @@ let download = ( e ) => {
 	} else {
 		let date = new Date;
 		let timestamp = Math.floor( date.getTime() / 1000 );
-		let img = drawCanvas.toDataURL( "image/png" );
-		console.log( img );;
 		downloadButton.download = timestamp;
 		downloadButton.href = img;
 	}
