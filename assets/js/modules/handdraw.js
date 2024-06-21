@@ -299,7 +299,7 @@ let download = ( e ) => {
 let image = ( canvas ) => {
 	const img = new Image( canvas.width, canvas.height );
 	img.src = BGIMG;
-	img.addEventListener( "load", () => ctxs.drawTempCtx.drawImage( img, 0, 0, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height) );
+	img.addEventListener( "load", () => ctxs.imageCtx.drawImage( img, 0, 0, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height) );
 }
 
 export const handDraw = () => {}
